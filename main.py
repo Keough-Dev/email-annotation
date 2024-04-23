@@ -12,6 +12,10 @@ def main():
             # Load data as dictionary
             data_dict = json.loads(data_input)
             
+            # Display the original email body text
+            st.write("## Original Email Body")
+            st.write(data_dict.get('body', 'No body text provided'))
+
             # Extract and display data in a structured form
             st.write("## Extracted Data")
             display_data_in_formatted_way(data_dict)
@@ -49,6 +53,7 @@ def display_nested_dict(nested_dict):
 
 if __name__ == "__main__":
     main()
+
 
 
 
