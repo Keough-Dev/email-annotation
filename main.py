@@ -1,36 +1,42 @@
 import streamlit as st
 import pandas as pd
 import json
+import re  # Import regular expressions
 
 # Function to convert dictionary to dataframe
 def dict_to_df(d):
     return pd.DataFrame([d])
 
-# Function to annotate text
+# Function to annotate text with regular expression for better matching
 def annotate_text(body, data):
-    # Creating annotations by filtering out non-essential keys
+    # Create annotations dictionary excluding certain keys
     annotations = {key: str(value) for key, value in data.items() if key not in ['contact_row', 'company_row', 'body']}
-    # Replacing occurrences of each annotation in the body text with a marked version
-    for k, v in annotations.items():
-        body = body.replace(v, f"[{v}]({k})")
+    
+    # Use regular expressions to replace each key with an HTML link for annotation
+    for key, value in annotations.items():
+        # Regex to match word boundaries taking care of case insensitivity
+        pattern = r'\b{}\b'.format(re.escape(value))
+        url = f"http://example.com/{key}"  # Placeholder URL for demonstration
+        body = re.sub(pattern, f'<a href="{url}" style="background-color: yellow;">{value}</a>', body, flags=re.IGNORECASE)
+    
     return body
 
 def main():
     st.title('Email Data Processor')
 
-    # User input area for JSON data
+    # Text area for user input of JSON data
     data = st.text_area("Paste your JSON data here:", height=300)
     if st.button("Process Data"):
         try:
-            # Parsing JSON from the input data
+            # Load data as dictionary
             data_dict = json.loads(data)
             
-            # Displaying the original body text
+            # Extract body text and display it
             body_text = data_dict.get('body', '')
             st.write("## Original Body Text")
             st.write(body_text)
             
-            # Converting contact and company details into DataFrames and displaying them
+            # Display contact and company rows as dataframes
             st.write("## Contact Details (DataFrame)")
             contact_df = dict_to_df(data_dict['contact_row'])
             st.dataframe(contact_df)
@@ -39,7 +45,7 @@ def main():
             company_df = dict_to_df(data_dict['company_row'])
             st.dataframe(company_df)
             
-            # Annotating and displaying the body text with links for highlighted data
+            # Annotate and display the body text
             st.write("## Annotated Body Text")
             annotated_body = annotate_text(body_text, data_dict)
             st.markdown(annotated_body, unsafe_allow_html=True)
@@ -51,6 +57,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
