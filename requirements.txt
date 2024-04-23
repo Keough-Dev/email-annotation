@@ -1,0 +1,11 @@
+pandas
+streamlit
+streamlit-ace
+pyyaml
+pathlib
+streamlit-authenticator
+streamlit-aggrid
+pytz
+boto3
+opensearch-py
+requests
