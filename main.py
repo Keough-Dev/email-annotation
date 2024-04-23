@@ -8,7 +8,9 @@ def dict_to_df(d):
 
 # Function to annotate text
 def annotate_text(body, data):
+    # Creating annotations by filtering out non-essential keys
     annotations = {key: str(value) for key, value in data.items() if key not in ['contact_row', 'company_row', 'body']}
+    # Replacing occurrences of each annotation in the body text with a marked version
     for k, v in annotations.items():
         body = body.replace(v, f"[{v}]({k})")
     return body
@@ -16,19 +18,19 @@ def annotate_text(body, data):
 def main():
     st.title('Email Data Processor')
 
-    # Text area for user input of JSON data
+    # User input area for JSON data
     data = st.text_area("Paste your JSON data here:", height=300)
     if st.button("Process Data"):
         try:
-            # Load data as dictionary
+            # Parsing JSON from the input data
             data_dict = json.loads(data)
             
-            # Extract body text and print it
+            # Displaying the original body text
             body_text = data_dict.get('body', '')
             st.write("## Original Body Text")
             st.write(body_text)
             
-            # Display contact and company rows as dataframes
+            # Converting contact and company details into DataFrames and displaying them
             st.write("## Contact Details (DataFrame)")
             contact_df = dict_to_df(data_dict['contact_row'])
             st.dataframe(contact_df)
@@ -37,10 +39,10 @@ def main():
             company_df = dict_to_df(data_dict['company_row'])
             st.dataframe(company_df)
             
-            # Annotate and display the body text
+            # Annotating and displaying the body text with links for highlighted data
             st.write("## Annotated Body Text")
             annotated_body = annotate_text(body_text, data_dict)
-            st.write(annotated_body, unsafe_allow_html=True)
+            st.markdown(annotated_body, unsafe_allow_html=True)
         
         except json.JSONDecodeError:
             st.error("Invalid JSON data. Please check and try again.")
@@ -49,6 +51,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
