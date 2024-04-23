@@ -14,10 +14,12 @@ def annotate_text(body, data):
     
     # Use regular expressions to replace each key with an HTML link for annotation
     for key, value in annotations.items():
-        # Regex to match word boundaries taking care of case insensitivity
-        pattern = r'\b{}\b'.format(re.escape(value))
-        url = f"http://example.com/{key}"  # Placeholder URL for demonstration
-        body = re.sub(pattern, f'<a href="{url}" style="background-color: yellow;">{value}</a>', body, flags=re.IGNORECASE)
+        # Enhanced Regex: Handles cases with punctuation and partial matches
+        # Escaping all regex special chars in value, and replacing common separators with optional spaces and punctuation
+        pattern = re.escape(value)
+        pattern = re.sub(r'\\ ', r'\\s*', pattern)  # Allow any whitespace between words
+        pattern = re.sub(r'(\\\-|\\\.|\\\/)', r'\\s*[-./]?\\s*', pattern)  # Allow optional punctuation between numbers/words
+        body = re.sub(pattern, f'<mark>{value}</mark>', body, flags=re.IGNORECASE)
     
     return body
 
