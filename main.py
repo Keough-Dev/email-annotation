@@ -18,7 +18,7 @@ if st.button('Submit'):
         if response.status_code == 200:
             # Optionally, handle the response from the server
             # st.success("Message sent successfully!")
-            st.write((response.json()))  # Display the JSON response if API sends something back
+            st.write((response.json()['body']))  # Display the JSON response if API sends something back
         else:
             st.error("Failed to send the message. Status code: {}".format(response.status_code))
     else:
