@@ -3,6 +3,11 @@ import pandas as pd
 import json
 import requests
 
+def reset_session():
+    st.session_state.questions = ["Would you like to install a sensor or skip this step?", "What operating system are you working off of?"]
+    st.session_state.answers = []
+    st.session_state.current_index = 0
+
 # Initialize session state only if it has not been initialized before
 if 'current_index' not in st.session_state:
     st.session_state.questions = ["Would you like to install a sensor or skip this step?", "What operating system are you working off of?"]
@@ -38,11 +43,6 @@ if st.button('Send'):
                 st.write(f"{q}: {a}")
             st.button("Reset", on_click=reset_session)
 else:
-    st.session_state.current_index = 0
-
-def reset_session():
-    st.session_state.questions = ["Would you like to install a sensor or skip this step?", "What operating system are you working off of?"]
-    st.session_state.answers = []
     st.session_state.current_index = 0
 
 # Questions for the survey
