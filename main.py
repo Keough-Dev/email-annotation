@@ -37,13 +37,13 @@ if st.button('Send'):
             st.session_state.current_index += 1
         else:
             st.write(response_message)
-            st.write("Conversation ended.")
-            st.write("Your responses:")
-            for q, a in zip(st.session_state.questions, st.session_state.answers):
-                st.write(f"{q}: {a}")
             st.button("Reset", on_click=reset_session)
 else:
     st.session_state.current_index = 0
+    st.write("Conversation ended.")
+    st.write("Your responses:")
+    for q, a in zip(st.session_state.questions, st.session_state.answers):
+        st.write(f"{q}: {a}")
 
 # Questions for the survey
 questions = {
