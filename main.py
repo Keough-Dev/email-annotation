@@ -3,6 +3,7 @@ import pandas as pd
 import json
 import requests
 
+# Initialize session state only if it has not been initialized before
 if 'current_index' not in st.session_state:
     st.session_state.questions = ["Would you like to install a sensor or skip this step?", "What operating system are you working off of?"]
     st.session_state.answers = []
@@ -13,32 +14,37 @@ headers = {"Content-Type": "application/json"}
 st.title('Node Chat')
 st.image('https://nodeware-static.s3.amazonaws.com/img/node.png')
 
+# Get the current question based on current_index
 current_question = st.session_state.questions[st.session_state.current_index]
 answer = st.text_input(current_question, key=str(st.session_state.current_index))
 
 if st.button('Send'):
-    st.session_state.current_index += 1
     if answer:
         response = requests.post('https://66oms19la2.execute-api.us-east-1.amazonaws.com/demo/acceptinput', json={'body': answer}, headers=headers)
         response_data = response.json()
-        # new_question = response_data.get('next_question')
         response_message = response_data.get('message', '')
-        try:
-            new_question = st.session_state.questions[st.session_state.current_index]
-        except:
-            new_question = ''
 
+        # Append the answer to the answers list
         st.session_state.answers.append(answer)
 
-        if st.session_state.current_index < 2:
-            st.session_state.questions.append(new_question)
-            # st.write(st.session_state.questions)
-            # st.write(st.session_state.answers)
+        # Check if there are more questions to ask
+        if st.session_state.current_index < len(st.session_state.questions) - 1:
+            st.session_state.current_index += 1
         else:
             st.write(response_message)
             st.write("Conversation ended.")
-            # st.write(st.session_state.questions)
-            # st.write(st.session_state.answers)
+            st.write("Your responses:")
+            for q, a in zip(st.session_state.questions, st.session_state.answers):
+                st.write(f"{q}: {a}")
+            st.button("Reset", on_click=reset_session)
+else:
+    st.session_state.current_index = 0
+
+def reset_session():
+    st.session_state.questions = ["Would you like to install a sensor or skip this step?", "What operating system are you working off of?"]
+    st.session_state.answers = []
+    st.session_state.current_index = 0
+
 
 
 # Questions for the survey
