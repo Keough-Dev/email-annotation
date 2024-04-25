@@ -94,7 +94,8 @@ if st.button('Send'):
 
  
 
-        st.write(response_processed)
+        html_text = response_processed.replace("\n", "<br>")
+        st.markdown(html_text, unsafe_allow_html=True)
 
  
 
@@ -122,7 +123,7 @@ if st.button('Send'):
 
                 st.write(f"{q}: {a}")
 
-            st.write(response_message)
+            # st.write(response_message)
 
             # st.button("Reset", on_click=reset_session)
 
