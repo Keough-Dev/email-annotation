@@ -14,26 +14,22 @@ if 'current_index' not in st.session_state:
     st.session_state.answers = []
     st.session_state.current_index = 0
 
-if 'current_question' not in st.session_state:
-    current_question = "Would you like to install a sensor or skip this step?"
-
 headers = {"Content-Type": "application/json"}
 
 st.title('Node Chat')
 st.image('https://nodeware-static.s3.amazonaws.com/img/node.png')
 
 # Get the current question based on current_index
-# current_question = st.session_state.questions[st.session_state.current_index]
+current_question = st.session_state.questions[st.session_state.current_index]
 answer = st.text_input(current_question, key=str(st.session_state.current_index))
 
 if st.button('Send'):
-    current_question = st.session_state.questions[st.session_state.current_index]
     if answer:
         response = requests.post('https://66oms19la2.execute-api.us-east-1.amazonaws.com/demo/acceptinput', json={'body': answer}, headers=headers)
         response_data = response.json()
         response_message = response_data.get('body', '')
         response_processed = json.loads(response_message)['body']
-        st.write(response_processed)
+        st.write(response_message)
 
         # Append the answer to the answers list
         st.session_state.answers.append(answer)
