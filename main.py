@@ -95,6 +95,7 @@ if st.button('Send'):
  
 
         html_text = response_processed.replace("\n", "<br>")
+        st.write(html_text)
         st.markdown(html_text, unsafe_allow_html=True)
 
  
