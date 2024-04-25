@@ -3,38 +3,32 @@ import pandas as pd
 import json
 import requests
 
-# Chat interface
+if 'questions' not in st.session_state or 'answers' not in st.session_state:
+    st.session_state.questions = ["Would you like to install a sensor or skip this step?"]
+    st.session_state.answers = []
+
+headers = {"Content-Type": "application/json"}
+
 st.title('Node Chat')
 st.image('https://nodeware-static.s3.amazonaws.com/img/node.png')
 
 current_question = st.session_state.questions[-1]
 answer = st.text_input(current_question, key=str(len(st.session_state.questions)))
 
-if 'questions' not in st.session_state:
-    st.session_state.questions = ["Would you like to install a sensor or skip this step?"]
-    st.session_state.answers = []
-
 if st.button('Send'):
     if answer:
         response = requests.post('https://66oms19la2.execute-api.us-east-1.amazonaws.com/demo/acceptinput', json={'body': answer}, headers=headers)
-        new_question = response.get('next_question', None)
-        response_message = response.get('message', '')
+        response_data = response.json() 
+        new_question = response_data.get('next_question')
+        response_message = response_data.get('message', '')
 
         st.session_state.answers.append(answer)
 
         if new_question:
             st.session_state.questions.append(new_question)
-            st.experimental_r
-
-# # Button to send the message
-# if st.button('Send'):
-#     # Sending the user input to AWS Lambda via API Gateway
-#     response = requests.post('https://66oms19la2.execute-api.us-east-1.amazonaws.com/demo/acceptinput', json={'body': answer}, headers=headers)
-#     if response.status_code == 200:
-#         # Display the response in the chat
-#         st.text_area("Chat", value=f'You: {user_input}\nBot: {response.json()["body"]}', height=300)
-#     else:
-#         st.error("Failed to get a response from the server.")
+        else:
+            st.write(response_message)
+            st.write("Conversation ended.")
 
 # Questions for the survey
 questions = {
