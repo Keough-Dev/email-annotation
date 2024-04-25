@@ -32,6 +32,8 @@ if st.button('Send'):
 
         if st.session_state.current_index <= 2:
             st.session_state.questions.append(new_question)
+            st.write(st.session_state.questions)
+            st.write(st.session_state.answers)
         else:
             st.write(response_message)
             st.write("Conversation ended.")
