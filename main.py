@@ -37,6 +37,7 @@ if st.button('Send'):
         # Check if there are more questions to ask
         if st.session_state.current_index < len(st.session_state.questions) - 1:
             st.session_state.current_index += 1
+            current_question = st.session_state.questions[st.session_state.current_index]
         else:
             st.write("Conversation ended.")
             st.write("Your responses:")
