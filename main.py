@@ -42,8 +42,8 @@ if st.button('Send'):
                 st.write(f"{q}: {a}")
             st.write(response_message)
             # st.button("Reset", on_click=reset_session)
-else:
-    st.session_state.current_index = 0
+# else:
+#     st.session_state.current_index = 0
 
 # Questions for the survey
 questions = {
