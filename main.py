@@ -4,7 +4,7 @@ import json
 import requests
 
 def reset_session():
-    st.session_state['questions'] = ["Would you like to install a sensor or skip this step?", "What operating system are you working off of?"]
+    st.session_state['questions'] = ["Would you like to install a sensor or skip this step?", "would you like sensor or virtual", "What operating system are you working off of?"]
     st.session_state['answers'] = []
     st.session_state['current_index'] = 0
     st.session_state['submit'] = False
