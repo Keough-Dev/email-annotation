@@ -17,12 +17,12 @@ current_question = st.session_state.questions[st.session_state.current_index]
 answer = st.text_input(current_question, key=str(st.session_state.current_index))
 
 if st.button('Send'):
+    st.session_state.current_index += 1
     if answer:
         response = requests.post('https://66oms19la2.execute-api.us-east-1.amazonaws.com/demo/acceptinput', json={'body': answer}, headers=headers)
         response_data = response.json()
         # new_question = response_data.get('next_question')
         response_message = response_data.get('message', '')
-        st.session_state.current_index += 1
         try:
             new_question = st.session_state.questions[st.session_state.current_index]
         except:
@@ -30,15 +30,15 @@ if st.button('Send'):
 
         st.session_state.answers.append(answer)
 
-        if st.session_state.current_index <= 2:
+        if st.session_state.current_index < 2:
             st.session_state.questions.append(new_question)
-            st.write(st.session_state.questions)
-            st.write(st.session_state.answers)
+            # st.write(st.session_state.questions)
+            # st.write(st.session_state.answers)
         else:
             st.write(response_message)
             st.write("Conversation ended.")
-            st.write(st.session_state.questions)
-            st.write(st.session_state.answers)
+            # st.write(st.session_state.questions)
+            # st.write(st.session_state.answers)
 
 
 # Questions for the survey
