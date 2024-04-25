@@ -3,7 +3,7 @@ import pandas as pd
 import json
 import requests
 
-if 'questions' not in st.session_state or 'answers' not in st.session_state:
+if 'questions' not in st.session_state or 'answers' not in st.session_state or 'current_index' not in st.session_state:
     st.session_state.questions = ["Would you like to install a sensor or skip this step?"]
     st.session_state.answers = []
     st.session_state.current_index = 0
