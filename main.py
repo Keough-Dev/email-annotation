@@ -182,7 +182,7 @@ if st.button('Submit Responses'):
 
         # Display the response in the chat
 
-        st.write("Chat", value=f'{response.json()["body"]}', height=300)
+        st.write(value=f'{response.json()["body"]}', height=300)
 
     else:
 
