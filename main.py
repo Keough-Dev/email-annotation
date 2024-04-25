@@ -25,6 +25,8 @@ if st.button('Send'):
         st.session_state.current_index += 1
         try:
             new_question = st.session_state.questions[st.session_state.current_index]
+        except:
+            new_question = ''
 
         st.session_state.answers.append(answer)
 
