@@ -4,7 +4,7 @@ import json
 import requests
 
 if 'questions' not in st.session_state or 'answers' not in st.session_state or 'current_index' not in st.session_state:
-    st.session_state.questions = ["Would you like to install a sensor or skip this step?"]
+    st.session_state.questions = ["Would you like to install a sensor or skip this step?", "What operating system are you working off of?"]
     st.session_state.answers = []
     st.session_state.current_index = 0
 
@@ -20,14 +20,16 @@ if st.button('Send'):
     if answer:
         response = requests.post('https://66oms19la2.execute-api.us-east-1.amazonaws.com/demo/acceptinput', json={'body': answer}, headers=headers)
         response_data = response.json()
-        new_question = response_data.get('next_question')
+        # new_question = response_data.get('next_question')
         response_message = response_data.get('message', '')
+        st.session_state.current_index += 1
+        try:
+            new_question = st.session_state.questions[st.session_state.current_index]
 
         st.session_state.answers.append(answer)
 
-        if new_question:
+        if st.session_state.current_index <= 2:
             st.session_state.questions.append(new_question)
-            st.session_state.current_index += 1
         else:
             st.write(response_message)
             st.write("Conversation ended.")
