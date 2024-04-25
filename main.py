@@ -4,9 +4,10 @@ import json
 import requests
 
 def reset_session():
-    st.session_state['questions'] = ["Would you like to install a sensor or skip this step?", "would you like to install sensor or virtual", "What operating system are you working off of?"]
+    st.session_state['questions'] = ["Would you like to install a sensor or skip this step?", "What operating system are you working off of?"]
     st.session_state['answers'] = []
     st.session_state['current_index'] = 0
+    st.session_state['submit'] = False
 
 # Initialize session state only if it has not been initialized before
 if 'current_index' not in st.session_state:
@@ -19,37 +20,33 @@ st.image('https://nodeware-static.s3.amazonaws.com/img/node.png')
 
 # Get the current question based on current_index
 current_question = st.session_state['questions'][st.session_state['current_index']]
-answer = st.text_input(current_question, key=st.session_state['current_index'])
+answer = st.text_input(current_question, key=st.session_state['current_index'], on_change=lambda: st.session_state.update({"submit": True}))
 
-if st.button('Send'):
-    if answer:
+if st.button('Send') or st.session_state['submit']:
+    if answer.strip():
         response = requests.post('https://66oms19la2.execute-api.us-east-1.amazonaws.com/demo/acceptinput', json={'body': answer}, headers=headers)
         response_data = response.json()
         response_message = response_data.get('body', '')
-        
-        # Try parsing JSON if needed or handle plain text
-        try:
-            response_processed = json.loads(response_message)['body']
-        except json.JSONDecodeError:
-            response_processed = response_message
-        
+
         st.session_state['answers'].append(answer)
-        
+
         # Increment to move to the next question or end conversation
         if st.session_state['current_index'] < len(st.session_state['questions']) - 1:
             st.session_state['current_index'] += 1
-            # Clearing input for the new question
-            st.session_state[str(st.session_state['current_index'])] = ''
         else:
             st.write("Conversation ended.")
             st.write("Your responses:")
             for q, a in zip(st.session_state['questions'], st.session_state['answers']):
                 st.write(f"{q}: {a}")
-            st.write(response_processed)
+            st.write(response_message)
+            reset_session()  # Optionally reset the session at the end of the conversation
 
-# Reset button outside the button press logic to ensure visibility
+    st.session_state['submit'] = False  # Reset the submit trigger
+
+# Optionally, add a button to reset the conversation
 if st.button("Reset Conversation"):
     reset_session()
+
 
 
 # Questions for the survey
