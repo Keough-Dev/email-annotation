@@ -4,21 +4,22 @@ import json
 import requests
 
 if 'questions' not in st.session_state or 'answers' not in st.session_state:
-    st.session_state.questions = ["Would you like to install a sensor or skip this step?", "Great! Let's get to installing the sensor, which operating system?"]
+    st.session_state.questions = ["Would you like to install a sensor or skip this step?"]
     st.session_state.answers = []
+    st.session_state.current_index = 0
 
 headers = {"Content-Type": "application/json"}
 
 st.title('Node Chat')
 st.image('https://nodeware-static.s3.amazonaws.com/img/node.png')
 
-current_question = st.session_state.questions[-1]
-answer = st.text_input(current_question, key=str(len(st.session_state.questions)))
+current_question = st.session_state.questions[st.session_state.current_index]
+answer = st.text_input(current_question, key=str(st.session_state.current_index))
 
 if st.button('Send'):
     if answer:
         response = requests.post('https://66oms19la2.execute-api.us-east-1.amazonaws.com/demo/acceptinput', json={'body': answer}, headers=headers)
-        response_data = response.json() 
+        response_data = response.json()
         new_question = response_data.get('next_question')
         response_message = response_data.get('message', '')
 
@@ -26,11 +27,13 @@ if st.button('Send'):
 
         if new_question:
             st.session_state.questions.append(new_question)
+            st.session_state.current_index += 1
         else:
             st.write(response_message)
             st.write("Conversation ended.")
             st.write(st.session_state.questions)
             st.write(st.session_state.answers)
+
 
 # Questions for the survey
 questions = {
