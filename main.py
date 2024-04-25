@@ -4,6 +4,11 @@ import json
 import requests
 
 def reset_session():
+    st.write(response_message)
+    st.write("Conversation ended.")
+    st.write("Your responses:")
+    for q, a in zip(st.session_state.questions, st.session_state.answers):
+        st.write(f"{q}: {a}")
     st.session_state.questions = ["Would you like to install a sensor or skip this step?", "What operating system are you working off of?"]
     st.session_state.answers = []
     st.session_state.current_index = 0
@@ -36,14 +41,9 @@ if st.button('Send'):
         if st.session_state.current_index < len(st.session_state.questions) - 1:
             st.session_state.current_index += 1
         else:
-            st.write(response_message)
-            st.write("Conversation ended.")
-            st.write("Your responses:")
-            for q, a in zip(st.session_state.questions, st.session_state.answers):
-                st.write(f"{q}: {a}")
             st.button("Reset", on_click=reset_session)
-else:
-    st.session_state.current_index = 0
+# else:
+#     st.session_state.current_index = 0
 
 # Questions for the survey
 questions = {
