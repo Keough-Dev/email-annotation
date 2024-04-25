@@ -27,7 +27,7 @@ if st.button('Send'):
     if answer:
         response = requests.post('https://66oms19la2.execute-api.us-east-1.amazonaws.com/demo/acceptinput', json={'body': answer}, headers=headers)
         response_data = response.json()
-        response_message = response_data.get('message', '')
+        response_message = response_data.get('body', '')
         st.write(response_message)
 
         # Append the answer to the answers list
