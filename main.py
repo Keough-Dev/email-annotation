@@ -29,7 +29,7 @@ if st.button('Send'):
         response_data = response.json()
         response_message = response_data.get('body', '')
         response_processed = json.loads(response_message)['body']
-        st.write(response_message)
+        st.write(response_processed)
 
         # Append the answer to the answers list
         st.session_state.answers.append(answer)
