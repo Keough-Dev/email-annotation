@@ -4,7 +4,7 @@ import json
 import requests
 
 if 'questions' not in st.session_state or 'answers' not in st.session_state:
-    st.session_state.questions = ["Would you like to install a sensor or skip this step?"]
+    st.session_state.questions = ["Would you like to install a sensor or skip this step?", "Great! Let's get to installing the sensor, which operating system?"]
     st.session_state.answers = []
 
 headers = {"Content-Type": "application/json"}
@@ -29,6 +29,8 @@ if st.button('Send'):
         else:
             st.write(response_message)
             st.write("Conversation ended.")
+            st.write(st.session_state.questions)
+            st.write(st.session_state.answers)
 
 # Questions for the survey
 questions = {
